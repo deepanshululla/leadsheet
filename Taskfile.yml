@@ -1,0 +1,59 @@
+version: '3'
+
+# Task runner for the leadsheet package.  Run `task` to list, `task <name>` to run.
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds: [task --list]
+    silent: true
+
+  sync:
+    desc: Install dependencies into the project venv (uv)
+    cmds: [uv sync]
+
+  build:
+    desc: Build every song in data/ (PDF + MP3)
+    cmds: [uv run leadsheet build]
+
+  pdf:
+    desc: Build PDFs only, skip audio
+    cmds: [uv run leadsheet build --no-audio]
+
+  song:
+    desc: 'Build one song, e.g. `task song -- happy_birthday`'
+    cmds: ['uv run leadsheet build {{.CLI_ARGS}}']
+
+  ls:
+    desc: List the songs in data/
+    cmds: [uv run leadsheet ls]
+
+  demo:
+    desc: 'Compose a song with music21 -> data/demo.{mid,mp3,pdf}'
+    cmds: [uv run leadsheet demo]
+
+  corpus:
+    desc: Build reference MIDI+WAV pairs from the .ly songs (data/corpus/)
+    cmds: [uv run leadsheet corpus]
+
+  verify:
+    desc: 'Transcribe corpus audio and score it (oracle; `task verify -- --engine piano` for real AMT)'
+    cmds: ['uv run leadsheet verify {{.CLI_ARGS}}']
+
+  gallery:
+    desc: 'Generate the HTML gallery with falling-notes piano (data/gallery/)'
+    cmds: ['uv run leadsheet gallery {{.CLI_ARGS}}']
+
+  test:
+    desc: Run the unit tests
+    cmds: [uv run pytest -q]
+
+  clean:
+    desc: Remove regenerable outputs (PDFs, MP3s, previews, gallery HTML, caches) — keeps the .ly sources
+    cmds:
+      - rm -f data/*.pdf data/*.mp3 data/*_preview-*.png data/demo.*
+      # per-song folders: drop built artifacts, keep <song>/<song>.ly
+      - rm -f data/gallery/*/*.pdf data/gallery/*/*.mp3 data/gallery/*/*_preview-*.png data/gallery/*/*.midi data/gallery/*/notes.json data/gallery/*/index.html
+      - rm -f data/gallery/index.html
+      - rm -rf data/gallery/assets data/corpus
+      - rm -rf .pytest_cache src/leadsheet/__pycache__ tests/__pycache__

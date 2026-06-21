@@ -1,0 +1,18 @@
+---
+description: uv package conventions (workflow, module split, testing) for leadsheet
+globs: src/leadsheet/*.py,tests/*.py,pyproject.toml
+alwaysApply: false
+---
+
+# Python package conventions
+
+Canonical version: `.claude/rules/python-package.md`. Key points:
+
+- uv-managed: `uv sync` to install, `uv add [--dev] <pkg>` to add deps, `uv run …`
+  to execute. Prefer the `task` shortcuts. Ignore the harmless `VIRTUAL_ENV does
+  not match` warning from a parent venv.
+- Module split: `engine.py` (render pipeline), `compose.py` (music21), `cli.py`
+  (thin argparse). Pure helpers get unit tests in `tests/`; subprocess steps are
+  verified by running the CLI, not mocked.
+- Raise `engine.BuildError` for user-facing failures. Type hints, `pathlib.Path`,
+  short docstrings; match the surrounding style.

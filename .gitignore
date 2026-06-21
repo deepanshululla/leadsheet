@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+# uv / virtualenv
+.venv/
+# python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+# music21 demo scratch
+data/demo.*
+# preview images
+data/*_preview-*.png
+# generated gallery artifacts — but KEEP each song's source: data/gallery/<song>/<song>.ly
+data/gallery/index.html
+data/gallery/assets/
+data/gallery/**/*.pdf
+data/gallery/**/*.mp3
+data/gallery/**/*_preview-*.png
+data/gallery/**/*.midi
+data/gallery/**/notes.json
+data/gallery/**/index.html

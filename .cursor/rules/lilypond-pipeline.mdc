@@ -1,0 +1,24 @@
+---
+description: LilyPond engraving + audio pipeline conventions for the leadsheet project
+globs: data/**/*.ly,src/leadsheet/engine.py
+alwaysApply: false
+---
+
+# LilyPond + audio pipeline
+
+Canonical version of this rule: `.claude/rules/lilypond-pipeline.md` (read it for
+the full text). Key points:
+
+- Songs are self-contained per folder: `data/gallery/<song>/<song>.ly` (legacy
+  flat `data/<song>.ly` still works), each `\include "lead-sheet.ily"` for the
+  shared `uppercase-note-name` letter-note helper that lives once at `data/`.
+  `engine._include_args(ly)` builds the `-I` flags (song folder + the ancestor
+  holding `lead-sheet.ily`) as **absolute** paths — LilyPond `chdir`s into the
+  file's folder, so a relative `-I` misses the include. Route lilypond calls
+  through it; never hard-code include paths.
+- A score needs `\midi { \tempo 4 = N }` for audio; add `\unfoldRepeats` so
+  repeats play.
+- **fluidsynth argument order:** soundfont and MIDI must be the last two args
+  (`fluidsynth -ni -F out.wav -r 44100 <sf2> <midi>`) or it writes nothing. Route
+  audio through `engine.midi_to_wav`.
+- Target LilyPond 2.24+; update old sources with `convert-ly -e file.ly`.

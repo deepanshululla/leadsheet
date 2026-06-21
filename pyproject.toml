@@ -1,0 +1,33 @@
+[project]
+name = "leadsheet"
+version = "0.1.0"
+description = "Render LilyPond lead sheets to PDF + verification audio, with music21 composition helpers."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "music21>=9.1",
+    "mir_eval>=0.7",
+    "pretty_midi>=0.2.10",
+]
+
+[project.optional-dependencies]
+# Real piano audio->notation engine for `leadsheet verify --engine piano`.
+# Heavy (pulls torch + librosa); the oracle engine needs none of this.
+transcribe = [
+    "piano_transcription_inference>=0.0.5",
+]
+
+[project.scripts]
+leadsheet = "leadsheet.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/leadsheet"]
