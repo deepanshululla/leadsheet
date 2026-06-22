@@ -19,8 +19,13 @@ global = {
 }
 
 %% Force at most 4 measures per line (skip-voice carries the breaks so the
-%% note staves keep a single voice / natural stem directions).
-lineBreaks = { \repeat unfold 9 { s1*4 \break } }
+%% note staves keep a single voice / natural stem directions). Written out as
+%% explicit skips on purpose (no unfold loop) — the gallery's measure-overlay
+%% extractor skips any song whose source contains a volta/unfold construct.
+lineBreaks = {
+  s1*4 \break s1*4 \break s1*4 \break s1*4 \break s1*4 \break
+  s1*4 \break s1*4 \break s1*4 \break s1*4 \break
+}
 
 %% ===========================================================================
 %% TOP STAFF (treble / right hand)

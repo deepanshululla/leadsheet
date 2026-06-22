@@ -45,3 +45,19 @@ Running log of image-reading gotchas. Append a dated bullet when you hit a new o
   the A-strain, "To Coda", "D.S. al Coda", final Coda bars) is best written
   LINEARLY as printed with \mark text rather than as functional volta repeats;
   \unfoldRepeats then just plays it straight through and still compiles clean.
+
+- 2026-06-21 (entertainer_musescore) — **layout + overlay gotchas on a long
+  piece.** (1) A 38-bar two-hand piece engraves onto one over-wide system unless
+  you force breaks; the gallery measure-overlay then computed boxes with x up to
+  ~4.1 (way past the 0..1 page fraction) and the score looked squished. Fix:
+  cap measures-per-line. Do it with a parallel skip-voice of breaks
+  (`lineBreaks = { s1*4 \break s1*4 \break ... }`) fed via `\new Dynamics
+  \lineBreaks` between the staves — keeps the note staves single-voice (no forced
+  stem flips). (2) `gallery.extract_measures` does a plain substring test
+  `if "\repeat" in ly_text: return []` — so it bails on `\repeat unfold` used for
+  the breaks AND, surprisingly, on the literal word `\repeat` appearing in a
+  COMMENT. Write the breaks out explicitly and keep the token out of comments, or
+  the playback overlay silently vanishes (0 boxes). (3) `\easyHeadsOn` +
+  `\override NoteHead.note-names = #(vector "C".."B")` gives letters-in-heads on a
+  dense two-hand piece too; bump `set-global-staff-size` (~21) so the letters stay
+  legible.
